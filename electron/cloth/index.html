@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cloth</title>
+    <link rel="stylesheet" type="text/css" href="styles/main.css">
+</head>
+<script id="fragmentShaderDepth" type="x-shader/x-fragment">
+    #include <packing>
+
+    uniform sampler2D texture;
+    varying vec2 vUV;
+
+    void main() {
+        vec4 pixel = texture2D( texture, vUV );
+        if( pixel.a < 0.5 ) discard;
+        gl_FragData[ 0 ] = packDepthToRGBA( gl_FragCoord.z );
+    }
+</script>
+<script id="vertexShaderDepth" type="x-shader/x-vertex">
+    varying vec2 vUV;
+
+    void main() {
+        vUV = 0.75 * uv;
+        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+        gl_Position = projectionMatrix * mvPosition;
+    }
+</script>
+<body>
+    <script type="text/javascript">
+        const THREE = require('three')
+        let clothGeometry, sphere
+    </script>
+    <script type="text/javascript" src="../lib/cloth.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+</body>
+</html>
